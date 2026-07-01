@@ -13,15 +13,29 @@ export function ExperienceItem({ experience }: { experience: Experience }) {
       className="group/experience screen-line-bottom scroll-mt-14 space-y-4 py-4"
     >
       <div className="flex items-start gap-3 sm:items-center">
-        <div className="flex size-6 shrink-0 items-center justify-center select-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:text-muted-foreground [&_svg:not([class*='size-'])]:size-5">
-          {experience.companyLogo ? (
+        <div className="flex shrink-0 items-center gap-1 select-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-5 [&_svg]:text-muted-foreground">
+          {experience.companyLogos ? (
+            experience.companyLogos.map((logo) => (
+              <Image
+                key={logo}
+                src={logo}
+                alt={`${experience.companyName} logo`}
+                width={24}
+                height={24}
+                quality={100}
+                className="size-6 rounded-md object-contain"
+                unoptimized
+                aria-hidden
+              />
+            ))
+          ) : experience.companyLogo ? (
             <Image
               src={experience.companyLogo}
               alt={`${experience.companyName} logo`}
               width={24}
               height={24}
               quality={100}
-              className="rounded-md object-contain"
+              className="size-6 rounded-md object-contain"
               unoptimized
               aria-hidden
             />

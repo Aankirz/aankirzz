@@ -9,7 +9,7 @@ export const USER: User = {
   pronouns: "he/him",
   bio: "Software engineer. I build LLM agent runtimes and pixel-perfect frontends.",
   flipSentences: [
-    "Software Engineer (AI) @ Simbian",
+    "AI Engineer @ Simbian",
     "I build LLM agent runtimes",
     "ex-CRED · ex-Chromium (GSoC '23)",
     "Low-level systems, fast frontends",
@@ -18,10 +18,10 @@ export const USER: User = {
   phoneNumberB64: "KzkxODE0NDA4MTcyMw==", // +918144081723, base64 encoded
   emailB64: "c2FodWFua2l0NDUzQGdtYWlsLmNvbQ==", // base64 encoded
   website: "https://ankitkiran.vercel.app",
-  jobTitle: "Software Engineer (AI)",
+  jobTitle: "AI Engineer",
   jobs: [
     {
-      title: "Software Engineer (AI)",
+      title: "AI Engineer",
       company: "Simbian AI",
       website: "https://simbian.ai",
       experienceId: "simbian-ai",

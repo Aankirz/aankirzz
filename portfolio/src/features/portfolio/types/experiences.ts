@@ -26,6 +26,9 @@ export type Experience = {
   companyName: string
   /** URL to the company logo (absolute URL or path under /public). */
   companyLogo?: string
+  /** Multiple logos shown side by side (e.g. GSoC + the host org). Takes
+   * precedence over `companyLogo` when set. */
+  companyLogos?: string[]
   /** UI icon to represent the company; used if `companyLogo` is not provided. */
   companyIcon?: React.ReactElement
   /** URL to the company's website. */

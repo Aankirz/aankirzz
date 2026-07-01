@@ -1,6 +1,7 @@
 import { Panel, PanelContent } from "../panel"
 
 type Credential = {
+  icons: string[]
   pre?: string
   mention: string
   href: string
@@ -8,21 +9,47 @@ type Credential = {
 }
 
 const CREDENTIALS: Credential[] = [
-  { pre: "AI Engineer", mention: "@Simbian", href: "https://simbian.ai" },
-  { pre: "Ex-", mention: "@CRED Money", href: "https://cred.club/money" },
   {
+    icons: ["/companies/simbian.png"],
+    pre: "AI Engineer",
+    mention: "@Simbian",
+    href: "https://simbian.ai",
+  },
+  {
+    icons: ["/companies/cred.png"],
+    pre: "Ex-",
+    mention: "@CRED Money",
+    href: "https://cred.club/",
+  },
+  {
+    icons: ["/companies/wootzapp.png"],
     pre: "Ex-Founding Engineer",
     mention: "@WootzApp",
-    href: "https://www.wootzapp.com",
+    href: "https://x.com/wootzapp",
   },
-  { mention: "@Solana", href: "https://solana.com", post: "grantee" },
   {
+    icons: ["/companies/solana.png"],
+    mention: "@Solana",
+    href: "https://solana.com",
+    post: "grantee",
+  },
+  {
+    icons: ["/companies/superteam.png"],
     pre: "Member",
     mention: "@SuperteamDAO",
     href: "https://superteam.fun",
   },
-  { pre: "GSoC'23", mention: "@Chromium", href: "https://www.chromium.org" },
-  { mention: "NIT Rkl'25", href: "https://www.nitrkl.ac.in" },
+  {
+    icons: ["/companies/gsoc.png", "/companies/chromium.png"],
+    pre: "GSoC'23",
+    mention: "@Chromium",
+    href: "https://www.chromium.org",
+  },
+  {
+    icons: ["/companies/nitrkl.png"],
+    mention: "NIT Rkl'25",
+    href: "https://www.nitrkl.ac.in",
+  },
 ]
 
 export function Overview() {
@@ -31,21 +58,26 @@ export function Overview() {
       <h2 className="sr-only">Overview</h2>
 
       <PanelContent>
-        <ul className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-sm/relaxed">
+        <ul className="flex flex-wrap items-center gap-x-4 gap-y-2.5 text-sm">
           {CREDENTIALS.map((c, index) => (
-            <li key={index} className="flex items-center gap-2.5">
-              {index > 0 && (
-                <span
-                  className="font-mono text-line select-none"
-                  aria-hidden
-                >
-                  /
-                </span>
-              )}
+            <li key={index} className="flex items-center gap-1.5">
+              <span className="flex shrink-0 items-center gap-1">
+                {c.icons.map((icon) => (
+                  <img
+                    key={icon}
+                    src={icon}
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="size-4.5 rounded-[5px] object-contain select-none"
+                    aria-hidden
+                  />
+                ))}
+              </span>
               <span className="text-muted-foreground">
                 {c.pre && <>{c.pre} </>}
                 <a
-                  className="font-medium text-foreground link-underline"
+                  className="link-underline font-medium text-foreground"
                   href={c.href}
                   target="_blank"
                   rel="noopener"
