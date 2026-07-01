@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header"
 import { AiSidebar } from "@/features/portfolio/components/ai-sidebar"
 import { InteractionSounds } from "@/features/portfolio/components/interaction-sounds"
 import { ProjectShowcase } from "@/features/portfolio/components/project-showcase"
+import { ResumeFab } from "@/features/portfolio/components/resume-fab"
 import { ResumeModal } from "@/features/portfolio/components/resume-modal"
 import { SectionRail } from "@/features/portfolio/components/section-rail"
 
@@ -34,6 +35,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <SectionRail />
       <ProjectShowcase />
       <ResumeModal />
+      <ResumeFab />
       <AiSidebar />
       <InteractionSounds />
     </div>
