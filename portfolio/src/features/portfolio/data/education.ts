@@ -25,6 +25,7 @@ export const EDUCATION: Education[] = [
   {
     id: "army-public-school",
     school: "Army Public School, Gopalpur",
+    logo: "/companies/aps.png",
     fieldOfStudy: "Class XII (CBSE)",
     period: {
       start: "2019",
