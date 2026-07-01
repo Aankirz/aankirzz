@@ -43,7 +43,7 @@ export function GitHubContributionGraph({
   const data = byYear[year] ?? byYear[initialYear] ?? []
 
   return (
-    <div className="flex flex-col gap-3 px-4 sm:flex-row sm:items-start sm:gap-4">
+    <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-start sm:gap-4">
       {/* Graph — scrolls horizontally on narrow screens like GitHub does. */}
       <div className="-mx-4 min-w-0 flex-1 overflow-x-auto px-4 sm:mx-0 sm:overflow-x-visible sm:px-0">
         <ContributionGraph

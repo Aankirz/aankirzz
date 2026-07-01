@@ -22,6 +22,8 @@ export type Project = {
   logo?: string
   /** Screenshot/preview image shown inside the expanded card (path under /public). */
   screenshot?: string
+  /** GitHub star count, shown subtly beside the link icon. */
+  stars?: number
   /** Whether the project card is expanded by default in the UI. */
   isExpanded?: boolean
 }

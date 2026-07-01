@@ -16,7 +16,7 @@ export function GitHubContributions() {
         <GitHubContributionGraph contributions={contributions} />
       </Suspense>
 
-      <div className="h-px" />
+      <div className="h-2" />
     </Panel>
   )
 }

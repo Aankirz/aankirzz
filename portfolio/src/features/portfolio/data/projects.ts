@@ -44,9 +44,11 @@ export const PROJECTS: Project[] = [
     period: {
       start: "03.2024",
     },
-    link: "https://github.com/wootzapp/wootz-browser",
+    link: "https://play.google.com/store/apps/details?id=com.wootzapp.web&hl=en_IN",
+    screenshot: "/projects/wootz.jpg",
+    stars: 105,
     skills: ["C++", "Chromium", "CDP", "Android"],
     description:
-      "- **★ 105 on GitHub** — fully open-source Android browser built on Chromium, re-architected into a deterministic training environment for AI agents.\n- Exposes internal rendering and DOM signals through a hardened CDP pipeline as agent reward sources that off-the-shelf automation can't surface.",
+      "- Fully open-source Android browser built on Chromium, re-architected into a deterministic training environment for AI agents.\n- Exposes internal rendering and DOM signals through a hardened CDP pipeline as agent reward sources that off-the-shelf automation can't surface.",
   },
 ]

@@ -1,9 +1,9 @@
 import { FileTextIcon, MailIcon } from "lucide-react"
 
-import { RESUME_URL } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { GitHubIcon, LinkedInIcon } from "@/components/icons"
 import { SiteFooterInteractiveLogotype } from "@/components/site-footer-brand"
+import { ResumeTrigger } from "@/features/portfolio/components/resume-trigger"
 import { SOCIAL } from "@/features/portfolio/data/social-links"
 import { USER } from "@/features/portfolio/data/user"
 
@@ -71,15 +71,12 @@ export function SiteFooter() {
 
             <Separator />
 
-            <a
+            <ResumeTrigger
               className="flex items-center text-muted-foreground transition-[color] hover:text-foreground"
-              href={RESUME_URL}
-              target="_blank"
-              rel="noopener"
               aria-label="Resume"
             >
               <FileTextIcon className="size-4" />
-            </a>
+            </ResumeTrigger>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { FileTextIcon, MailIcon } from "lucide-react"
 
-import { MAIN_NAV, RESUME_URL } from "@/config/site"
+import { MAIN_NAV } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -14,6 +14,7 @@ import { ChanhDaiMark } from "@/components/chanhdai-mark"
 import { NavDesktop } from "@/components/nav-desktop"
 import { SiteHeaderShell } from "@/components/site-header-shell"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { ResumeTrigger } from "@/features/portfolio/components/resume-trigger"
 import { SOCIAL } from "@/features/portfolio/data/social-links"
 
 export function SiteHeader() {
@@ -50,10 +51,7 @@ export function SiteHeader() {
           <Tooltip>
             <TooltipTrigger
               render={
-                <a
-                  href={RESUME_URL}
-                  target="_blank"
-                  rel="noopener"
+                <ResumeTrigger
                   aria-label="Resume"
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "icon-sm" }),
@@ -61,7 +59,7 @@ export function SiteHeader() {
                   )}
                 >
                   <FileTextIcon />
-                </a>
+                </ResumeTrigger>
               }
             />
             <TooltipContent>Resume</TooltipContent>

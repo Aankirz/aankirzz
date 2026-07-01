@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { addQueryParams } from "@/utils/url"
-import { BoxIcon, LinkIcon } from "lucide-react"
+import { LinkIcon, StarIcon } from "lucide-react"
 
 import { periodYear } from "@/features/portfolio/lib/format-period"
 
@@ -32,11 +32,7 @@ export function ProjectItem({
   const year = periodYear(project.period.start)
 
   return (
-    <ProjectCollapsible
-      projectId={project.id}
-      className={className}
-      defaultOpen={project.isExpanded}
-    >
+    <ProjectCollapsible projectId={project.id} className={className}>
       <div
         id={`project-${project.id}`}
         data-project-id={project.id}
@@ -54,8 +50,8 @@ export function ProjectItem({
             aria-hidden
           />
         ) : (
-          <div className="mx-4 flex size-6 shrink-0 items-center justify-center rounded-lg border border-muted-foreground/15 bg-muted text-muted-foreground ring-1 ring-line ring-offset-1 ring-offset-background select-none">
-            <BoxIcon className="size-4" />
+          <div className="mx-4 flex size-6 shrink-0 items-center justify-center rounded-lg border border-muted-foreground/15 bg-muted font-mono text-sm font-medium text-muted-foreground uppercase ring-1 ring-line ring-offset-1 ring-offset-background select-none">
+            {project.title.charAt(0)}
           </div>
         )}
 
@@ -70,7 +66,27 @@ export function ProjectItem({
                 <dt className="sr-only">Year</dt>
                 <dd>{year}</dd>
               </dl>
+
+              {project.skills.length > 0 && (
+                <ul className="mt-2 flex flex-wrap gap-1.5">
+                  {project.skills.map((skill, index) => (
+                    <li key={index} className="flex">
+                      <Tag>{skill}</Tag>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
+
+            {project.stars != null && (
+              <span
+                className="flex shrink-0 items-center gap-0.5 font-mono text-xs text-muted-foreground"
+                aria-label={`${project.stars} GitHub stars`}
+              >
+                <StarIcon className="size-3.5" />
+                {project.stars}
+              </span>
+            )}
 
             <Tooltip>
               <TooltipTrigger
@@ -123,16 +139,6 @@ export function ProjectItem({
             <Prose>
               <Markdown>{project.description}</Markdown>
             </Prose>
-          )}
-
-          {project.skills.length > 0 && (
-            <ul className="flex flex-wrap gap-1.5">
-              {project.skills.map((skill, index) => (
-                <li key={index} className="flex">
-                  <Tag>{skill}</Tag>
-                </li>
-              ))}
-            </ul>
           )}
         </div>
       </CollapsibleContent>

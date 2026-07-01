@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { useAtomValue } from "jotai"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
@@ -24,6 +24,8 @@ export function ProjectShowcase() {
   const reduce = useReducedMotion()
   const activeId = useAtomValue(activeProjectAtom)
   const [inView, setInView] = useState(false)
+  const [top, setTop] = useState<number>(0)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!isWide) return
@@ -31,11 +33,34 @@ export function ProjectShowcase() {
     if (!section) return
     const observer = new IntersectionObserver(
       ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin: "-10% 0% -10% 0%", threshold: 0 }
+      { rootMargin: "0px", threshold: 0 }
     )
     observer.observe(section)
     return () => observer.disconnect()
   }, [isWide])
+
+  // Keep the preview vertically centered, but clamped inside the Projects
+  // section so it never floats above or below it.
+  useEffect(() => {
+    if (!isWide) return
+    const update = () => {
+      const section = document.getElementById("projects")
+      const h = ref.current?.offsetHeight ?? 0
+      if (!section) return
+      const rect = section.getBoundingClientRect()
+      const desired = window.innerHeight / 2 - h / 2
+      const min = rect.top + 8
+      const max = rect.bottom - h - 8
+      setTop(Math.max(Math.min(desired, max), Math.min(min, max)))
+    }
+    update()
+    window.addEventListener("scroll", update, { passive: true })
+    window.addEventListener("resize", update)
+    return () => {
+      window.removeEventListener("scroll", update)
+      window.removeEventListener("resize", update)
+    }
+  }, [isWide, activeId, inView])
 
   if (!isWide) return null
 
@@ -44,7 +69,9 @@ export function ProjectShowcase() {
 
   return (
     <div
-      className="fixed top-1/2 left-[calc(50vw+28rem+2rem)] z-40 hidden w-[min(24rem,calc(50vw-28rem-3.5rem))] -translate-y-1/2 min-[84rem]:block"
+      ref={ref}
+      style={{ top }}
+      className="fixed left-[calc(50vw+28rem+2rem)] z-40 hidden w-[min(24rem,calc(50vw-28rem-3.5rem))] min-[84rem]:block"
       aria-hidden
     >
       <AnimatePresence mode="wait">

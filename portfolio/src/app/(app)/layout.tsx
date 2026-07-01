@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header"
 import { AiSidebar } from "@/features/portfolio/components/ai-sidebar"
 import { InteractionSounds } from "@/features/portfolio/components/interaction-sounds"
 import { ProjectShowcase } from "@/features/portfolio/components/project-showcase"
+import { ResumeModal } from "@/features/portfolio/components/resume-modal"
 import { SectionRail } from "@/features/portfolio/components/section-rail"
 
 const ScrollToTop = dynamic(() =>
@@ -32,6 +33,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <ScrollToTop />
       <SectionRail />
       <ProjectShowcase />
+      <ResumeModal />
       <AiSidebar />
       <InteractionSounds />
     </div>
