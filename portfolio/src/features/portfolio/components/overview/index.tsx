@@ -1,56 +1,63 @@
-import { MapPinIcon } from "lucide-react"
-
-import { USER } from "@/features/portfolio/data/user"
-
 import { Panel, PanelContent } from "../panel"
-import { CurrentLocalTimeItem } from "./current-local-time-item"
-import { EmailItem } from "./email-item"
-import {
-  IntroItem,
-  IntroItemContent,
-  IntroItemIcon,
-  IntroItemLink,
-} from "./intro-item"
-import { JobItem } from "./job-item"
+
+type Credential = {
+  pre?: string
+  mention: string
+  href: string
+  post?: string
+}
+
+const CREDENTIALS: Credential[] = [
+  { pre: "AI Engineer", mention: "@Simbian", href: "https://simbian.ai" },
+  { pre: "Ex-", mention: "@CRED Money", href: "https://cred.club/money" },
+  {
+    pre: "Ex-Founding Engineer",
+    mention: "@WootzApp",
+    href: "https://www.wootzapp.com",
+  },
+  { mention: "@Solana", href: "https://solana.com", post: "grantee" },
+  {
+    pre: "Member",
+    mention: "@SuperteamDAO",
+    href: "https://superteam.fun",
+  },
+  { pre: "GSoC'23", mention: "@Chromium", href: "https://www.chromium.org" },
+  { mention: "NIT Rkl'25", href: "https://www.nitrkl.ac.in" },
+]
 
 export function Overview() {
   return (
     <Panel className="screen-line-bottom-none">
       <h2 className="sr-only">Overview</h2>
 
-      <PanelContent className="grid gap-x-4 gap-y-2.5 sm:grid-cols-2">
-        {USER.jobs.map((job, index) => {
-          return (
-            <JobItem
-              key={index}
-              title={job.title}
-              company={job.company}
-              website={job.website}
-              experienceId={job.experienceId}
-            />
-          )
-        })}
-
-        <IntroItem>
-          <IntroItemIcon>
-            <MapPinIcon />
-          </IntroItemIcon>
-          <IntroItemContent>
-            <IntroItemLink
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(USER.address)}`}
-              aria-label={`Location: ${USER.address}`}
-            >
-              {USER.address}
-            </IntroItemLink>
-          </IntroItemContent>
-        </IntroItem>
-
-        <CurrentLocalTimeItem timeZone={USER.timeZone} />
-
-        <EmailItem emailB64={USER.emailB64} />
+      <PanelContent>
+        <ul className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-sm/relaxed">
+          {CREDENTIALS.map((c, index) => (
+            <li key={index} className="flex items-center gap-2.5">
+              {index > 0 && (
+                <span
+                  className="font-mono text-line select-none"
+                  aria-hidden
+                >
+                  /
+                </span>
+              )}
+              <span className="text-muted-foreground">
+                {c.pre && <>{c.pre} </>}
+                <a
+                  className="font-medium text-foreground link-underline"
+                  href={c.href}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {c.mention}
+                </a>
+                {c.post && <> {c.post}</>}
+              </span>
+            </li>
+          ))}
+        </ul>
       </PanelContent>
-
-      <div className="pointer-events-none absolute top-px bottom-0 left-1/2 -z-1 w-px -translate-x-2.25 bg-[linear-gradient(to_bottom,var(--line)_4px,transparent_2px)] bg-size-[1px_6px] bg-repeat-y max-sm:hidden" />
     </Panel>
   )
 }
