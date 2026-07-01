@@ -153,24 +153,19 @@ export function AiSidebar() {
               aria-label="Ankit's AI assistant"
               className="fixed inset-y-0 right-0 z-60 flex h-dvh w-[min(420px,100vw)] flex-col border-l border-line bg-background shadow-2xl"
             >
-              {/* header */}
-              <header className="flex shrink-0 items-center gap-3 border-b border-line px-4 py-3">
-                <span className="relative shrink-0">
-                  <img
-                    src={USER.avatar}
-                    alt={USER.displayName}
-                    className="size-9 rounded-full object-cover ring-2 ring-link/50"
-                  />
-                  <span className="absolute -right-px -bottom-px size-2.5 rounded-full bg-link ring-2 ring-background" />
+              {/* header — terminal style */}
+              <header className="flex shrink-0 items-center gap-2 border-b border-line px-4 py-2.5 font-mono">
+                <img
+                  src={USER.avatar}
+                  alt=""
+                  className="size-6 rounded-md object-cover ring-1 ring-line"
+                  aria-hidden
+                />
+                <span className="text-sm text-foreground">ankit-bot</span>
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <span className="size-1.5 rounded-full bg-link" aria-hidden />
+                  online
                 </span>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-foreground">
-                    Ankit&apos;s AI
-                  </p>
-                  <p className="font-mono text-xs text-muted-foreground">
-                    ask anything about Ankit
-                  </p>
-                </div>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -181,24 +176,25 @@ export function AiSidebar() {
                 </button>
               </header>
 
-              {/* conversation */}
+              {/* conversation — terminal session */}
               <div
                 ref={scrollRef}
-                className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 text-sm"
+                className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 font-mono text-sm leading-relaxed"
               >
                 {history.length === 0 ? (
                   <div className="flex flex-col gap-4">
-                    <Bubble assistant avatar={USER.avatar}>
-                      Hi, I&apos;m Ankit&apos;s AI. Ask me about his work,
+                    <p className="text-muted-foreground">
+                      <span className="mr-1.5 text-link">❯</span>
+                      ankit-bot ready. ask anything about Ankit&apos;s work,
                       experience, or projects.
-                    </Bubble>
-                    <div className="flex flex-col gap-2">
+                    </p>
+                    <div className="flex flex-col items-start gap-1.5">
                       {SUGGESTIONS.map((s) => (
                         <button
                           key={s}
                           type="button"
                           onClick={() => ask(s)}
-                          className="rounded-lg border border-line px-3 py-2 text-left font-mono text-xs text-muted-foreground transition-colors hover:border-link hover:text-link focus-visible:ring-2 focus-visible:ring-link focus-visible:outline-none"
+                          className="rounded-md border border-line px-2.5 py-1.5 text-left text-xs text-muted-foreground transition-colors hover:border-link hover:text-link focus-visible:ring-2 focus-visible:ring-link focus-visible:outline-none"
                         >
                           <span className="mr-1.5 text-link">❯</span>
                           {s}
@@ -208,58 +204,64 @@ export function AiSidebar() {
                   </div>
                 ) : (
                   history.map((entry, i) => (
-                    <div key={i} className="flex flex-col gap-3">
-                      <div className="ml-auto max-w-[85%] rounded-lg rounded-br-sm bg-muted px-3 py-2 break-words text-foreground">
-                        {entry.question}
+                    <div key={i} className="flex flex-col gap-1">
+                      <div className="break-words">
+                        <span className="mr-1.5 text-link">❯</span>
+                        <span className="text-foreground">{entry.question}</span>
                       </div>
                       {entry.pending ? (
-                        <Bubble assistant avatar={USER.avatar}>
-                          <span className="text-muted-foreground">
-                            thinking
-                            <span
-                              className="ml-0.5 inline-block h-3 w-1.5 translate-y-0.5 bg-muted-foreground"
-                              style={caretStyle}
-                              aria-hidden
-                            />
-                          </span>
-                        </Bubble>
+                        <span className="pl-4 text-muted-foreground">
+                          thinking
+                          <span
+                            className="ml-0.5 inline-block h-3 w-1.5 translate-y-0.5 bg-muted-foreground"
+                            style={caretStyle}
+                            aria-hidden
+                          />
+                        </span>
                       ) : (
-                        <Bubble assistant avatar={USER.avatar} error={entry.error}>
+                        <p
+                          className={
+                            entry.error
+                              ? "pl-4 text-destructive"
+                              : "pl-4 text-muted-foreground"
+                          }
+                        >
                           {entry.answer}
-                        </Bubble>
+                        </p>
                       )}
                     </div>
                   ))
                 )}
               </div>
 
-              {/* input */}
+              {/* input — terminal prompt */}
               <form
                 onSubmit={(e) => {
                   e.preventDefault()
                   ask(input)
                 }}
-                className="flex shrink-0 items-center gap-2 border-t border-line p-3"
+                className="flex shrink-0 items-center gap-2 border-t border-line px-4 py-3 font-mono text-sm"
               >
+                <span className="shrink-0 text-link">❯</span>
                 <input
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   maxLength={500}
                   disabled={busy}
-                  placeholder="Ask me anything…"
+                  placeholder="ask me anything…"
                   aria-label="Ask a question about Ankit"
                   spellCheck={false}
                   autoComplete="off"
-                  className="h-10 w-full rounded-lg border border-line bg-muted/40 px-4 text-sm text-foreground caret-link outline-none placeholder:text-muted-foreground/70 focus-visible:border-link disabled:opacity-50"
+                  className="w-full bg-transparent text-foreground caret-link outline-none placeholder:text-muted-foreground/60 disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   disabled={busy || !input.trim()}
                   aria-label="Send"
-                  className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-link text-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none disabled:opacity-40"
+                  className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:text-link focus-visible:ring-2 focus-visible:ring-link focus-visible:outline-none disabled:opacity-40"
                 >
-                  <ArrowUpIcon className="size-5" />
+                  <ArrowUpIcon className="size-4.5" />
                 </button>
               </form>
             </motion.aside>
@@ -267,36 +269,6 @@ export function AiSidebar() {
         )}
       </AnimatePresence>
     </>
-  )
-}
-
-function Bubble({
-  children,
-  avatar,
-  error,
-}: {
-  children: React.ReactNode
-  assistant: true
-  avatar: string
-  error?: boolean
-}) {
-  return (
-    <div className="flex max-w-[90%] items-start gap-2">
-      <img
-        src={avatar}
-        alt=""
-        className="mt-0.5 size-6 shrink-0 rounded-full object-cover ring-1 ring-line"
-      />
-      <div
-        className={
-          error
-            ? "rounded-lg rounded-bl-sm bg-destructive/10 px-3 py-2 text-destructive"
-            : "rounded-lg rounded-bl-sm bg-muted/50 px-3 py-2 leading-relaxed text-foreground"
-        }
-      >
-        {children}
-      </div>
-    </div>
   )
 }
 

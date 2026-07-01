@@ -18,6 +18,24 @@ export const SOCIAL = {
     href: "https://www.linkedin.com/in/ankit-kiran-3819b0219",
     sameAs: true,
   },
+  x: {
+    title: "X",
+    handle: "@AnkitKiran7",
+    href: "https://x.com/AnkitKiran7",
+    sameAs: true,
+  },
+  gerrit: {
+    title: "Gerrit",
+    handle: "Chromium reviews",
+    href: "https://chromium-review.googlesource.com/q/owner:sahuankit453@gmail.com",
+    sameAs: true,
+  },
+  blog: {
+    title: "Blog",
+    handle: "llawliet.bearblog.dev",
+    href: "https://llawliet.bearblog.dev",
+    sameAs: true,
+  },
   email: {
     title: "Email",
     handle: "sahuankit453@gmail.com",

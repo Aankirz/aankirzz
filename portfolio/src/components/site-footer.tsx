@@ -1,17 +1,16 @@
-import { FileTextIcon, MailIcon } from "lucide-react"
+import { FileTextIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { GitHubIcon, LinkedInIcon } from "@/components/icons"
 import { SiteFooterInteractiveLogotype } from "@/components/site-footer-brand"
 import { ResumeTrigger } from "@/features/portfolio/components/resume-trigger"
-import { SOCIAL } from "@/features/portfolio/data/social-links"
+import { SOCIAL_ICONS } from "@/features/portfolio/components/social-link-icons"
+import {
+  SOCIAL,
+  SOCIAL_LINKS,
+} from "@/features/portfolio/data/social-links"
 import { USER } from "@/features/portfolio/data/user"
 
 export function SiteFooter() {
-  const githubLink = SOCIAL.github
-  const linkedinLink = SOCIAL.linkedin
-  const emailLink = SOCIAL.email
-
   return (
     <footer className="max-w-screen overflow-x-clip px-2">
       <div className="mx-auto border-x border-line group-has-data-[slot=layout-wide]/layout:container md:max-w-4xl">
@@ -25,7 +24,7 @@ export function SiteFooter() {
             <dd>
               <a
                 className="link-underline"
-                href={githubLink.href}
+                href={SOCIAL.github.href}
                 target="_blank"
                 rel="noopener"
               >
@@ -36,38 +35,21 @@ export function SiteFooter() {
         </dl>
 
         <div className="screen-line-top screen-line-bottom flex w-full before:z-1 after:z-1">
-          <div className="mx-auto flex items-center justify-center gap-3 border-x border-line bg-background px-4">
-            <a
-              className="flex items-center text-muted-foreground transition-[color] hover:text-foreground"
-              href={githubLink.href}
-              target="_blank"
-              rel="noopener"
-              aria-label="GitHub Profile"
-            >
-              <GitHubIcon className="size-4" />
-            </a>
-
-            <Separator />
-
-            <a
-              className="flex items-center text-muted-foreground transition-[color] hover:text-foreground"
-              href={linkedinLink.href}
-              target="_blank"
-              rel="noopener"
-              aria-label="LinkedIn Profile"
-            >
-              <LinkedInIcon className="size-4" />
-            </a>
-
-            <Separator />
-
-            <a
-              className="flex items-center text-muted-foreground transition-[color] hover:text-foreground"
-              href={emailLink.href}
-              aria-label="Email"
-            >
-              <MailIcon className="size-4" />
-            </a>
+          <div className="mx-auto flex flex-wrap items-center justify-center gap-3 border-x border-line bg-background px-4 [&_a]:flex [&_a]:items-center [&_img]:size-4 [&_svg]:size-4">
+            {SOCIAL_LINKS.map((link, index) => (
+              <div key={link.name} className="flex items-center gap-3">
+                {index > 0 && <Separator />}
+                <a
+                  className="text-muted-foreground transition-[color] hover:text-foreground"
+                  href={link.href}
+                  target={link.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel="noopener"
+                  aria-label={link.title}
+                >
+                  {SOCIAL_ICONS[link.name]}
+                </a>
+              </div>
+            ))}
 
             <Separator />
 

@@ -1,6 +1,6 @@
-import { MailIcon } from "lucide-react"
+import { MailIcon, RssIcon } from "lucide-react"
 
-import { GitHubIcon, LinkedInIcon } from "@/components/icons"
+import { GitHubIcon, LinkedInIcon, XIcon } from "@/components/icons"
 import type { SocialName } from "@/features/portfolio/data/social-links"
 
 /**
@@ -11,5 +11,14 @@ import type { SocialName } from "@/features/portfolio/data/social-links"
 export const SOCIAL_ICONS: Record<SocialName, React.JSX.Element> = {
   github: <GitHubIcon />,
   linkedin: <LinkedInIcon />,
+  x: <XIcon />,
+  gerrit: (
+    <img
+      src="/companies/gerrit.png"
+      alt=""
+      className="size-4.5 rounded-[3px] object-contain"
+    />
+  ),
+  blog: <RssIcon />,
   email: <MailIcon />,
 }

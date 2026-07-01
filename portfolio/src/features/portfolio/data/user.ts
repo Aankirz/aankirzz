@@ -9,10 +9,11 @@ export const USER: User = {
   pronouns: "he/him",
   bio: "Software engineer. I build LLM agent runtimes and pixel-perfect frontends.",
   flipSentences: [
-    "AI Engineer @ Simbian",
-    "I build LLM agent runtimes",
-    "ex-CRED · ex-Chromium (GSoC '23)",
-    "Low-level systems, fast frontends",
+    "I build the plumbing agents actually run on",
+    "Chromium internals to production frontends",
+    "LLM agents: cheap, sandboxed, measurable",
+    "Low-level systems, pixel-tight interfaces",
+    "The hard parts: runtimes, renderers, reliability",
   ],
   address: "India",
   phoneNumberB64: "KzkxODE0NDA4MTcyMw==", // +918144081723, base64 encoded
