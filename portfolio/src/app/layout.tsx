@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from "next"
 import Script from "next/script"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { WebSite, WithContext } from "schema-dts"
 
 import { JSON_LD_ID, personJsonLd } from "@/config/json-ld"
@@ -134,6 +135,7 @@ export default function RootLayout({
           <NuqsAdapter>{children}</NuqsAdapter>
         </Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

@@ -3,19 +3,26 @@
 import { useEffect } from "react"
 
 /**
- * Records one page view per browser session. Fires a single POST to the views
- * counter, guarded by sessionStorage so refreshes within a session don't
- * inflate the count. No-op if the counter store isn't configured.
+ * Records one page view per visitor. A persistent id in localStorage survives
+ * reloads and tab closes, and the server dedups on it, so the same person is
+ * counted once (per day) rather than on every refresh. No-op if storage is
+ * blocked or the counter store isn't configured.
  */
 export function ViewBeacon() {
   useEffect(() => {
+    let visitorId: string
     try {
-      if (sessionStorage.getItem("pv")) return
-      sessionStorage.setItem("pv", "1")
+      visitorId = localStorage.getItem("vid") ?? crypto.randomUUID()
+      localStorage.setItem("vid", visitorId)
     } catch {
-      // sessionStorage unavailable (private mode) — still count the view once.
+      return // no storage → skip counting rather than inflate the total
     }
-    fetch("/api/views", { method: "POST" }).catch(() => {})
+
+    fetch("/api/views", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ visitorId }),
+    }).catch(() => {})
   }, [])
 
   return null

@@ -11,6 +11,11 @@ const KV_TOKEN =
 
 const TOTAL_KEY = "pageviews"
 const dayKey = (iso: string) => `pv:${iso}` // iso = YYYY-MM-DD
+const seenKey = (id: string) => `pv:seen:${id.slice(0, 64)}`
+
+// Count each visitor at most once per this window. Reloads and repeat visits
+// within a day don't inflate the total; a genuine return the next day counts.
+const DEDUP_WINDOW_SECONDS = 60 * 60 * 24
 
 export const isPageViewsConfigured = Boolean(KV_URL && KV_TOKEN)
 
@@ -40,10 +45,29 @@ function todayISO(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
-/** Records a view: bumps the running total and today's bucket. Returns total. */
-export async function incrementPageViews(): Promise<number | null> {
+/**
+ * Records a view, deduplicated per visitor. `SET ... NX` returns "OK" only when
+ * the key is newly created, so a repeat visit (reload, second tab, revisit
+ * within the window) returns null and we leave the count untouched. Bumps the
+ * running total and today's bucket only for a genuinely new visitor.
+ */
+export async function incrementPageViews(
+  visitorId?: string
+): Promise<number | null> {
   if (!isPageViewsConfigured) return null
-  // fire the daily bucket, then return the running total
+
+  if (visitorId) {
+    const firstSeen = await redis([
+      "SET",
+      seenKey(visitorId),
+      "1",
+      "EX",
+      DEDUP_WINDOW_SECONDS,
+      "NX",
+    ])
+    if (firstSeen !== "OK") return getPageViews()
+  }
+
   await redis(["INCR", dayKey(todayISO())])
   return redis<number>(["INCR", TOTAL_KEY])
 }
