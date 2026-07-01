@@ -1,20 +1,13 @@
-"use client"
-
 import Image from "next/image"
-import { useSetAtom } from "jotai"
 import { addQueryParams } from "@/utils/url"
 import { BoxIcon, LinkIcon } from "lucide-react"
 
 import { periodYear } from "@/features/portfolio/lib/format-period"
-import { activeProjectAtom } from "@/features/portfolio/state/active-project"
 
 import { UTM_PARAMS } from "@/config/site"
 import { Tag } from "@/components/ui/tag"
 import { Prose } from "@/components/ui/typography"
-import {
-  Collapsible,
-  CollapsibleChevronsUpDownIcon,
-} from "@/components/base/collapsible-animated"
+import { CollapsibleChevronsUpDownIcon } from "@/components/base/collapsible-animated"
 import {
   CollapsibleContent,
   CollapsibleTrigger,
@@ -27,6 +20,7 @@ import {
 import { Markdown } from "@/components/markdown"
 
 import type { Project } from "../../types/projects"
+import { ProjectCollapsible } from "./project-collapsible"
 
 export function ProjectItem({
   className,
@@ -36,17 +30,12 @@ export function ProjectItem({
   project: Project
 }) {
   const year = periodYear(project.period.start)
-  const setActive = useSetAtom(activeProjectAtom)
 
   return (
-    <Collapsible
+    <ProjectCollapsible
+      projectId={project.id}
       className={className}
       defaultOpen={project.isExpanded}
-      onOpenChange={(open) =>
-        setActive((current) =>
-          open ? project.id : current === project.id ? null : current
-        )
-      }
     >
       <div
         id={`project-${project.id}`}
@@ -147,6 +136,6 @@ export function ProjectItem({
           )}
         </div>
       </CollapsibleContent>
-    </Collapsible>
+    </ProjectCollapsible>
   )
 }
