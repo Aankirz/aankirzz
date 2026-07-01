@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import { useAtomValue } from "jotai"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { ArrowUpRightIcon } from "lucide-react"
 
@@ -10,46 +11,36 @@ import { UTM_PARAMS } from "@/config/site"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { PROJECTS } from "@/features/portfolio/data/projects"
 import { periodYear } from "@/features/portfolio/lib/format-period"
+import { activeProjectAtom } from "@/features/portfolio/state/active-project"
 
 /**
- * A live preview pinned in the right gutter on wide screens. As the visitor
- * scrolls the Projects section, it crossfades to the screenshot of whichever
- * project is in view — the card stays compact in the column, the picture lives
- * in the space to its right. Projects without a screenshot fade the panel out.
+ * A live preview pinned in the right gutter on wide screens. It mirrors the
+ * project whose card is currently open — open a tab and its screenshot appears
+ * immediately. Only shown while the Projects section is on screen; projects
+ * without a screenshot fade the panel out.
  */
 export function ProjectShowcase() {
   const isWide = useMediaQuery("(min-width: 84rem)")
   const reduce = useReducedMotion()
-  const [activeId, setActiveId] = useState<string | null>(null)
+  const activeId = useAtomValue(activeProjectAtom)
+  const [inView, setInView] = useState(false)
 
   useEffect(() => {
     if (!isWide) return
-    const els = PROJECTS.map((p) => document.getElementById(`project-${p.id}`))
-      .filter((el): el is HTMLElement => el !== null)
-    if (els.length === 0) return
-
-    const visible = new Set<string>()
+    const section = document.getElementById("projects")
+    if (!section) return
     const observer = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          const id = (e.target as HTMLElement).dataset.projectId
-          if (!id) continue
-          if (e.isIntersecting) visible.add(id)
-          else visible.delete(id)
-        }
-        // Topmost visible project wins.
-        const topmost = PROJECTS.map((p) => p.id).find((id) => visible.has(id))
-        setActiveId(topmost ?? null)
-      },
-      { rootMargin: "-25% 0% -45% 0%", threshold: 0 }
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "-10% 0% -10% 0%", threshold: 0 }
     )
-    els.forEach((el) => observer.observe(el))
+    observer.observe(section)
     return () => observer.disconnect()
   }, [isWide])
 
   if (!isWide) return null
 
-  const active = PROJECTS.find((p) => p.id === activeId && p.screenshot)
+  const active =
+    inView ? PROJECTS.find((p) => p.id === activeId && p.screenshot) : undefined
 
   return (
     <div
@@ -66,7 +57,7 @@ export function ProjectShowcase() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="group pointer-events-auto block"
           >
             <p className="mb-2 font-mono text-xs text-muted-foreground">

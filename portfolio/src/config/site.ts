@@ -38,6 +38,9 @@ export const SOURCE_CODE_GITHUB_URL = "https://github.com/Aankirz"
 
 export const SPONSORSHIP_URL = "https://github.com/Aankirz"
 
+export const RESUME_URL =
+  "https://drive.google.com/file/d/1g2jNIvQ10qzXj3GLvtrHnoGZrpPY7u7K/view?usp=sharing"
+
 export const UTM_PARAMS = {
   utm_source: "ankitkiran.vercel.app",
 }

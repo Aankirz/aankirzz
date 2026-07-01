@@ -5,7 +5,6 @@ import { format } from "date-fns"
 import { LoaderIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
@@ -46,7 +45,7 @@ export function GitHubContributionGraph({
   return (
     <div className="flex flex-col gap-3 px-4 sm:flex-row sm:items-start sm:gap-4">
       {/* Graph — scrolls horizontally on narrow screens like GitHub does. */}
-      <div className="-mx-4 min-w-0 flex-1 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+      <div className="-mx-4 min-w-0 flex-1 overflow-x-auto px-4 sm:mx-0 sm:overflow-x-visible sm:px-0">
         <ContributionGraph
           className="gap-4 py-1"
           data={data}
@@ -102,7 +101,7 @@ export function GitHubContributionGraph({
           Ghost buttons that match the theme-toggle look. */}
       {years.length > 1 && (
         <div
-          className="flex shrink-0 gap-1.5 max-sm:flex-wrap sm:flex-col"
+          className="flex shrink-0 gap-1 max-sm:flex-wrap sm:flex-col"
           role="group"
           aria-label="Filter contributions by year"
         >
@@ -113,11 +112,10 @@ export function GitHubContributionGraph({
               onClick={() => setYear(y)}
               aria-pressed={y === year}
               className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "border-none font-mono sm:w-16 sm:justify-start",
+                "cursor-pointer rounded-md px-2 py-1 text-center font-mono text-xs leading-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-link focus-visible:outline-none sm:w-14 sm:text-left",
                 y === year
                   ? "bg-muted font-medium text-foreground"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {y}

@@ -1,6 +1,8 @@
-import { LICENSE, SOURCE_CODE_GITHUB_URL } from "@/config/site"
+import { FileTextIcon, MailIcon } from "lucide-react"
+
+import { RESUME_URL } from "@/config/site"
 import { cn } from "@/lib/utils"
-import { DmcaIcon, GitHubIcon, LinkedInIcon } from "@/components/icons"
+import { GitHubIcon, LinkedInIcon } from "@/components/icons"
 import { SiteFooterInteractiveLogotype } from "@/components/site-footer-brand"
 import { SOCIAL } from "@/features/portfolio/data/social-links"
 import { USER } from "@/features/portfolio/data/user"
@@ -8,6 +10,7 @@ import { USER } from "@/features/portfolio/data/user"
 export function SiteFooter() {
   const githubLink = SOCIAL.github
   const linkedinLink = SOCIAL.linkedin
+  const emailLink = SOCIAL.email
 
   return (
     <footer className="max-w-screen overflow-x-clip px-2">
@@ -16,7 +19,7 @@ export function SiteFooter() {
           <div className="stripe-divider h-12" />
         </div>
 
-        <dl className="flex flex-col gap-4 py-8 font-mono [&_dd]:text-sm [&_dt]:text-right [&_dt]:text-sm [&_dt]:text-muted-foreground [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-2">
+        <dl className="flex flex-col gap-4 py-8 font-mono [&_dd]:text-sm [&_dt]:text-right [&_dt]:text-sm [&_dt]:text-muted-foreground">
           <Item>
             <dt>Crafted by</dt>
             <dd>
@@ -27,50 +30,6 @@ export function SiteFooter() {
                 rel="noopener"
               >
                 {USER.displayName}
-              </a>
-            </dd>
-          </Item>
-
-          <Item>
-            <dt>Built with</dt>
-            <dd>
-              <ul>
-                <li>Next.js</li>
-                <li>Tailwind CSS</li>
-                <li>shadcn/ui</li>
-              </ul>
-            </dd>
-          </Item>
-
-          <Item>
-            <dt>Deployed on</dt>
-            <dd>Vercel</dd>
-          </Item>
-
-          <Item>
-            <dt>Source code</dt>
-            <dd>
-              <a
-                className="link-underline"
-                href={SOURCE_CODE_GITHUB_URL}
-                target="_blank"
-                rel="noopener"
-              >
-                GitHub
-              </a>
-            </dd>
-          </Item>
-
-          <Item>
-            <dt>License</dt>
-            <dd>
-              <a
-                className="link-underline"
-                href={LICENSE.url}
-                target="_blank"
-                rel="noopener"
-              >
-                {LICENSE.name}
               </a>
             </dd>
           </Item>
@@ -103,24 +62,26 @@ export function SiteFooter() {
             <Separator />
 
             <a
-              className="flex text-muted-foreground transition-[color] hover:text-foreground"
-              href={
-                process.env.NEXT_PUBLIC_DMCA_URL ||
-                "https://www.dmca.com/ProtectionPro.aspx"
-              }
+              className="flex items-center text-muted-foreground transition-[color] hover:text-foreground"
+              href={emailLink.href}
+              aria-label="Email"
+            >
+              <MailIcon className="size-4" />
+            </a>
+
+            <Separator />
+
+            <a
+              className="flex items-center text-muted-foreground transition-[color] hover:text-foreground"
+              href={RESUME_URL}
               target="_blank"
               rel="noopener"
-              aria-label="DMCA.com Protection Status"
+              aria-label="Resume"
             >
-              <DmcaIcon className="h-4.5 w-auto" />
+              <FileTextIcon className="size-4" />
             </a>
           </div>
         </div>
-
-        {/* <div className="*:absolute *:z-2 *:flex *:size-2 *:border *:border-line *:bg-background">
-          <div className="bottom-[-3.5px] left-[-4.5px]" />
-          <div className="right-[-4.5px] bottom-[-3.5px]" />
-        </div> */}
       </div>
 
       <SiteFooterInteractiveLogotype />

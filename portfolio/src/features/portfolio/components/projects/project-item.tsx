@@ -1,8 +1,12 @@
+"use client"
+
 import Image from "next/image"
+import { useSetAtom } from "jotai"
 import { addQueryParams } from "@/utils/url"
 import { BoxIcon, LinkIcon } from "lucide-react"
 
 import { periodYear } from "@/features/portfolio/lib/format-period"
+import { activeProjectAtom } from "@/features/portfolio/state/active-project"
 
 import { UTM_PARAMS } from "@/config/site"
 import { Tag } from "@/components/ui/tag"
@@ -32,9 +36,18 @@ export function ProjectItem({
   project: Project
 }) {
   const year = periodYear(project.period.start)
+  const setActive = useSetAtom(activeProjectAtom)
 
   return (
-    <Collapsible className={className} defaultOpen={project.isExpanded}>
+    <Collapsible
+      className={className}
+      defaultOpen={project.isExpanded}
+      onOpenChange={(open) =>
+        setActive((current) =>
+          open ? project.id : current === project.id ? null : current
+        )
+      }
+    >
       <div
         id={`project-${project.id}`}
         data-project-id={project.id}

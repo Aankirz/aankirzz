@@ -40,7 +40,7 @@ Winner of the Solana Colosseum Renaissance Hackathon ($30k, 2nd prize).
     darkOff: "/ankit.jpeg",
     darkOn: "/ankit.jpeg",
   },
-  ogImage: "/og.svg",
+  ogImage: "/og.jpg",
   namePronunciationUrl: "",
   timeZone: "Asia/Kolkata",
   keywords: [

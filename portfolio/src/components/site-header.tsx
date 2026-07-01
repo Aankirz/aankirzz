@@ -1,7 +1,7 @@
 import Link from "next/link"
-import { MailIcon } from "lucide-react"
+import { FileTextIcon, MailIcon } from "lucide-react"
 
-import { MAIN_NAV } from "@/config/site"
+import { MAIN_NAV, RESUME_URL } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -45,6 +45,26 @@ export function SiteHeader() {
               }
             />
             <TooltipContent>Contact</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <a
+                  href={RESUME_URL}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Resume"
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "icon-sm" }),
+                    "border-none"
+                  )}
+                >
+                  <FileTextIcon />
+                </a>
+              }
+            />
+            <TooltipContent>Resume</TooltipContent>
           </Tooltip>
 
           <Separator
