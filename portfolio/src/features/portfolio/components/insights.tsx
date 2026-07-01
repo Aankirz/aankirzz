@@ -21,10 +21,12 @@ export async function Insights() {
     getPageViewsSeries(30),
   ])
 
-  // No real view data yet (counter not configured or zero) → hide the section.
-  if (!total || series.length === 0) {
+  // Only show once the view counter is wired up (series is empty otherwise).
+  if (series.length === 0) {
     return null
   }
+
+  const totalViews = total ?? 0
 
   const today = series[series.length - 1]?.views ?? 0
   const last7 = series.slice(-7).reduce((sum, p) => sum + p.views, 0)
@@ -49,7 +51,7 @@ export async function Insights() {
         <dl className="grid grid-cols-2 md:grid-cols-4">
           <Metric>
             <MetricLabel>Total views</MetricLabel>
-            <MetricValue>{total.toLocaleString()}</MetricValue>
+            <MetricValue>{totalViews.toLocaleString()}</MetricValue>
           </Metric>
           <Metric>
             <MetricLabel>Today</MetricLabel>

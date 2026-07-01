@@ -16,6 +16,7 @@ const MODELS = [
   "qwen/qwen3-next-80b-a3b-instruct:free",
 ].filter((m): m is string => Boolean(m))
 const MAX_QUESTION_LENGTH = 500
+const MAX_HISTORY_TURNS = 6
 
 // ponytail: in-memory per-IP limiter, resets on cold start; swap for Upstash if
 // abuse becomes real. 10 questions / minute is plenty for a portfolio.
@@ -78,6 +79,7 @@ Rules:
 - Keep answers short and terminal-friendly: plain text, no markdown, no bullet symbols, under 70 words.
 - If the answer isn't in the context, say you only know about Ankit's work and experience.
 - Be direct and a little dry, like a CLI. No filler greetings.
+- Use the prior conversation to resolve references. If the visitor says "there", "that", "it", or asks a follow-up, resolve it against the last topic discussed and answer only about that.
 - Emphasis: lead with his current AI work at Simbian AI and his frontend work at CRED. Mention WootzApp and Google Summer of Code briefly, and only go into detail on them if the visitor asks specifically.
 
 CONTEXT:
@@ -99,10 +101,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
 
+  const typed = body as {
+    question?: unknown
+    history?: unknown
+  }
+
   const question =
-    body && typeof (body as { question?: unknown }).question === "string"
-      ? (body as { question: string }).question.trim()
-      : ""
+    typeof typed.question === "string" ? typed.question.trim() : ""
 
   if (!question) {
     return NextResponse.json({ error: "empty question" }, { status: 400 })
@@ -114,9 +119,28 @@ export async function POST(req: Request) {
     )
   }
 
-  // Cache hits are free (no model call) — serve them before rate limiting.
-  const cached = getCachedAnswer(question)
-  if (cached) return NextResponse.json({ answer: cached, cached: true })
+  // Prior turns for multi-turn context. Keep the last few, trimmed for size.
+  const history: { role: "user" | "assistant"; content: string }[] =
+    Array.isArray(typed.history)
+      ? typed.history
+          .slice(-MAX_HISTORY_TURNS)
+          .flatMap((turn) => {
+            const t = turn as { question?: unknown; answer?: unknown }
+            if (typeof t.question !== "string" || typeof t.answer !== "string")
+              return []
+            return [
+              { role: "user" as const, content: t.question.slice(0, MAX_QUESTION_LENGTH) },
+              { role: "assistant" as const, content: t.answer.slice(0, 800) },
+            ]
+          })
+      : []
+
+  // The per-question cache is only safe for first-turn questions (no history),
+  // since a follow-up's answer depends on the conversation. Cache hits are free.
+  if (history.length === 0) {
+    const cached = getCachedAnswer(question)
+    if (cached) return NextResponse.json({ answer: cached, cached: true })
+  }
 
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous"
@@ -129,6 +153,7 @@ export async function POST(req: Request) {
 
   const messages = [
     { role: "system", content: SYSTEM_PROMPT(getContext()) },
+    ...history,
     { role: "user", content: question },
   ]
 
@@ -161,7 +186,7 @@ export async function POST(req: Request) {
         .replace(/^"|"$/g, "")
 
       if (answer) {
-        cacheAnswer(question, answer)
+        if (history.length === 0) cacheAnswer(question, answer)
         return NextResponse.json({ answer })
       }
     } catch {

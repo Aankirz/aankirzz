@@ -49,6 +49,13 @@ export function AiSidebar() {
   async function ask(question: string) {
     const q = question.trim()
     if (!q || busy) return
+
+    // Prior completed turns become conversation context so follow-ups
+    // ("there", "that project") resolve correctly.
+    const priorTurns = history
+      .filter((e) => !e.pending && !e.error)
+      .map((e) => ({ question: e.question, answer: e.answer }))
+
     setInput("")
     setBusy(true)
     setHistory((h) => [...h, { question: q, answer: "", pending: true }])
@@ -56,7 +63,7 @@ export function AiSidebar() {
       const res = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q }),
+        body: JSON.stringify({ question: q, history: priorTurns }),
       })
       const data = (await res.json()) as { answer?: string; error?: string }
       const answer = res.ok

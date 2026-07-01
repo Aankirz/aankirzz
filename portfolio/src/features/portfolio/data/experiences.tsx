@@ -19,7 +19,7 @@ export const EXPERIENCES: Experience[] = [
         },
         employmentType: "Full-time",
         icon: <BotIcon />,
-        description: `- Built the **agent factory** at the core of Simbian's *Agentic Harness*, a multi-tenant LLM agent runtime — it constructs each session agent and its sub-agents from one shared config object, replacing a tangle of one-off setup code.
+        description: `- Built the **agent factory** at the core of Simbian's *Agentic Harness*, a multi-tenant LLM agent runtime that constructs each session agent and its sub-agents from one shared config object, replacing a tangle of one-off setup code.
 - Designed the **context and cost layer**: per-session token and dollar caps that aggregate spend across turns and sub-agents so an agent can't run away on cost, plus skill ranking, a goal-evaluator that judges when an agent has met its objective, and a live one-line session summarizer.
 - Hardened the runtime for production with **nsjail** sandboxing that isolates each agent to its tenant, a sync engine that pins every session to the correct skill version, and a leader-elected scheduler using a **Postgres lock** so replicas never double-dispatch a job.
 - Built the full **React** console on top of the runtime and wrote the **pytest** suite behind the whole system.`,
@@ -82,7 +82,7 @@ export const EXPERIENCES: Experience[] = [
         icon: <GlobeIcon />,
         description: `- Rewrote **Chromium** renderer internals (**C++/Java**) for WootzApp, a fully open-source Android browser, turning it into a deterministic training environment for AI agents that exposes internal rendering and DOM signals through a hardened **CDP** pipeline as reward sources off-the-shelf automation (Selenium, Playwright) can't surface.
 - Built the Android **WebView** implementation and in-browser app surface, embedding agent-facing web tasks directly in the native browser.
-- First engineer at the company — built the team from zero by hiring and onboarding the founding engineering group and setting technical direction for the Chromium-for-agents platform.`,
+- First engineer at the company: built the team from zero by hiring and onboarding the founding engineering group and setting technical direction for the Chromium-for-agents platform.`,
         skills: ["C++", "Java", "JavaScript", "Chromium", "CDP", "Android"],
       },
     ],
@@ -97,7 +97,7 @@ export const EXPERIENCES: Experience[] = [
     positions: [
       {
         id: "1",
-        title: "Contributor — Chromium Organization",
+        title: "Contributor, Chromium Organization",
         employmentPeriod: {
           start: "05.2023",
           end: "09.2023",
