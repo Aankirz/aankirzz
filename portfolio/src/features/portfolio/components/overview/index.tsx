@@ -11,7 +11,7 @@ type Credential = {
 const CREDENTIALS: Credential[] = [
   {
     icons: ["/companies/simbian.png"],
-    pre: "AI Engineer",
+    pre: "Software Engineer",
     mention: "@Simbian",
     href: "https://simbian.ai",
   },
