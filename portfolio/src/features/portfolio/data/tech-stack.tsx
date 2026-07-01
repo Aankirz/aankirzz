@@ -121,9 +121,16 @@ export const TECH_STACK: TechStack[] = [
 
   // AI / Infra
   {
-    key: "llm-agent-runtimes",
-    title: "LLM Agent Runtimes",
-    href: "https://simbian.ai",
+    key: "strands-sdk",
+    title: "Strands SDK",
+    href: "https://strandsagents.com",
+    icon: <BotIcon />,
+    categories: ["AI / Infra"],
+  },
+  {
+    key: "litellm",
+    title: "LiteLLM",
+    href: "https://litellm.ai",
     icon: <BotIcon />,
     categories: ["AI / Infra"],
   },

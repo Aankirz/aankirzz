@@ -24,7 +24,7 @@ export function SiteFooter() {
             <dd>
               <a
                 className="link-underline"
-                href={SOCIAL.github.href}
+                href={SOCIAL.linkedin.href}
                 target="_blank"
                 rel="noopener"
               >

@@ -4,6 +4,7 @@ export const EDUCATION: Education[] = [
   {
     id: "nit-rourkela",
     school: "National Institute of Technology, Rourkela",
+    logo: "/companies/nitrkl.png",
     degree: "B.Tech",
     fieldOfStudy: "Chemical Engineering",
     period: {
