@@ -15,9 +15,8 @@ type Entry = {
 
 const SUGGESTIONS = [
   "What did Ankit build at Simbian?",
-  "Tell me about the Chromium work",
+  "Tell me about the CRED work",
   "What's his strongest project?",
-  "Is he open to new roles?",
 ]
 
 const caretStyle = { animation: "caret-blink 1.1s steps(1, end) infinite" }

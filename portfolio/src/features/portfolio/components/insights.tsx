@@ -1,6 +1,3 @@
-import { formatDuration } from "@/utils/format"
-import { format } from "date-fns"
-
 import { cn } from "@/lib/utils"
 import Grid from "@/components/charts/grid"
 import LineChart, { Line } from "@/components/charts/line-chart"
@@ -9,29 +6,35 @@ import {
   Panel,
   PanelHeader,
   PanelTitle,
-  PanelTitleSup,
 } from "@/features/portfolio/components/panel"
 import { PanelTitleCopy } from "@/features/portfolio/components/panel-title-copy"
-import { getInsights } from "@/features/portfolio/data/insights"
+import {
+  getPageViews,
+  getPageViewsSeries,
+} from "@/features/portfolio/data/page-views"
 
 const ID = "insights"
 
 export async function Insights() {
-  const data = await getInsights()
+  const [total, series] = await Promise.all([
+    getPageViews(),
+    getPageViewsSeries(30),
+  ])
 
-  if (data === null) {
+  // No real view data yet (counter not configured or zero) → hide the section.
+  if (!total || series.length === 0) {
     return null
   }
+
+  const today = series[series.length - 1]?.views ?? 0
+  const last7 = series.slice(-7).reduce((sum, p) => sum + p.views, 0)
+  const peak = Math.max(...series.map((p) => p.views))
 
   return (
     <Panel id={ID}>
       <PanelHeader>
         <PanelTitle>
           <a href={`#${ID}`}>Insights</a>
-          <PanelTitleSup>
-            ({format(new Date(data.startDate), "dd.MM")} –{" "}
-            {format(new Date(data.endDate), "dd.MM")})
-          </PanelTitleSup>
           <PanelTitleCopy id={ID} />
         </PanelTitle>
       </PanelHeader>
@@ -45,69 +48,34 @@ export async function Insights() {
 
         <dl className="grid grid-cols-2 md:grid-cols-4">
           <Metric>
-            <MetricLabel>Unique visitors</MetricLabel>
-            <MetricValue>
-              {data.summary.unique_visitors.toLocaleString()}
-            </MetricValue>
+            <MetricLabel>Total views</MetricLabel>
+            <MetricValue>{total.toLocaleString()}</MetricValue>
           </Metric>
-
           <Metric>
-            <MetricLabel>Sessions</MetricLabel>
-            <MetricValue>
-              {data.summary.total_sessions.toLocaleString()}
-            </MetricValue>
+            <MetricLabel>Today</MetricLabel>
+            <MetricValue>{today.toLocaleString()}</MetricValue>
           </Metric>
-
           <Metric>
-            <MetricLabel>Views</MetricLabel>
-            <MetricValue>
-              {data.summary.total_screen_views.toLocaleString()}
-            </MetricValue>
+            <MetricLabel>Last 7 days</MetricLabel>
+            <MetricValue>{last7.toLocaleString()}</MetricValue>
           </Metric>
-
           <Metric>
-            <MetricLabel>Session duration</MetricLabel>
-            <MetricValue>
-              {formatDuration(data.summary.avg_session_duration)}
-            </MetricValue>
+            <MetricLabel>Peak day</MetricLabel>
+            <MetricValue>{peak.toLocaleString()}</MetricValue>
           </Metric>
         </dl>
       </div>
 
       <figure>
-        {data.series.length > 0 ? (
-          <LineChart
-            className={cn(
-              "sm:aspect-3/1!",
-              "[--chart-1:var(--color-zinc-900)] [--chart-2:var(--color-zinc-400)]",
-              "dark:[--chart-1:var(--color-zinc-100)] dark:[--chart-2:var(--color-zinc-600)]"
-            )}
-            data={data.series}
-            margin={{ top: 16, right: 32, bottom: 40, left: 32 }}
-          >
-            <Grid horizontal />
-            <Line
-              dataKey="total_sessions"
-              stroke="var(--chart-2)"
-              strokeWidth={2}
-            />
-            <Line
-              dataKey="unique_visitors"
-              stroke="var(--chart-1)"
-              strokeWidth={2}
-            />
-            <ChartTooltip
-              rowLabels={{
-                total_sessions: "Sessions",
-                unique_visitors: "Unique Visitors",
-              }}
-            />
-          </LineChart>
-        ) : (
-          <div className="grid aspect-2/1 w-full place-content-center sm:aspect-3/1">
-            <p className="text-muted-foreground">No insights available.</p>
-          </div>
-        )}
+        <LineChart
+          className="sm:aspect-3/1!"
+          data={series}
+          margin={{ top: 16, right: 32, bottom: 40, left: 32 }}
+        >
+          <Grid horizontal />
+          <Line dataKey="views" stroke="var(--link)" strokeWidth={2} />
+          <ChartTooltip rowLabels={{ views: "Page views" }} />
+        </LineChart>
 
         <figcaption className="pointer-events-none absolute right-2 bottom-2 bg-background font-mono text-xs leading-none text-zinc-400 select-none sm:right-4 dark:text-zinc-700">
           FIG_002
@@ -123,7 +91,7 @@ function Metric({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="metric"
       className={cn(
         "flex flex-col gap-2 p-4",
-        "max-sm:nth-[2n+1]:screen-line-bottom sm:nth-[3n+1]:screen-line-bottom",
+        "max-sm:nth-[2n+1]:screen-line-bottom sm:nth-[4n+1]:screen-line-bottom",
         className
       )}
       {...props}

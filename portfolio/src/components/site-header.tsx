@@ -12,6 +12,8 @@ import {
 } from "@/components/base/ui/tooltip"
 import { ChanhDaiMark } from "@/components/chanhdai-mark"
 import { NavDesktop } from "@/components/nav-desktop"
+import { NavGitHubFollowers } from "@/components/nav-github-followers"
+import { NavViews } from "@/components/nav-views"
 import { SiteHeaderShell } from "@/components/site-header-shell"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ResumeTrigger } from "@/features/portfolio/components/resume-trigger"
@@ -29,7 +31,18 @@ export function SiteHeader() {
 
         <NavDesktop items={MAIN_NAV} />
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-0.5">
+          <NavGitHubFollowers />
+
+          <Separator
+            orientation="vertical"
+            className="mx-1.5 data-vertical:h-5 data-vertical:self-center max-sm:hidden"
+          />
+
+          <span className="mr-1 flex items-center max-sm:hidden">
+            <NavViews />
+          </span>
+
           <Tooltip>
             <TooltipTrigger
               render={

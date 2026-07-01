@@ -8,6 +8,7 @@ import { InteractionSounds } from "@/features/portfolio/components/interaction-s
 import { ProjectShowcase } from "@/features/portfolio/components/project-showcase"
 import { ResumeFab } from "@/features/portfolio/components/resume-fab"
 import { ResumeModal } from "@/features/portfolio/components/resume-modal"
+import { ViewBeacon } from "@/features/portfolio/components/view-beacon"
 import { SectionRail } from "@/features/portfolio/components/section-rail"
 
 const ScrollToTop = dynamic(() =>
@@ -36,6 +37,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <ProjectShowcase />
       <ResumeModal />
       <ResumeFab />
+      <ViewBeacon />
       <AiSidebar />
       <InteractionSounds />
     </div>
