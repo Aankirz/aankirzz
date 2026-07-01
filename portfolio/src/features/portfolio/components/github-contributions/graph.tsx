@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import { LoaderIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
@@ -43,40 +44,17 @@ export function GitHubContributionGraph({
   const data = byYear[year] ?? byYear[initialYear] ?? []
 
   return (
-    <div className="flex flex-col gap-3">
-      {years.length > 1 && (
-        <div
-          className="flex flex-wrap gap-1.5 px-4"
-          role="group"
-          aria-label="Filter contributions by year"
+    <div className="flex flex-col gap-3 px-4 sm:flex-row sm:items-start sm:gap-4">
+      {/* Graph — scrolls horizontally on narrow screens like GitHub does. */}
+      <div className="-mx-4 min-w-0 flex-1 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+        <ContributionGraph
+          className="gap-4 py-1"
+          data={data}
+          blockSize={12}
+          blockMargin={2}
+          blockRadius={0}
+          aria-label="GitHub Contributions Graph"
         >
-          {years.map((y) => (
-            <button
-              key={y}
-              type="button"
-              onClick={() => setYear(y)}
-              aria-pressed={y === year}
-              className={cn(
-                "rounded-lg border px-2.5 py-1 font-mono text-xs transition-colors focus-visible:ring-2 focus-visible:ring-link focus-visible:outline-none",
-                y === year
-                  ? "border-link text-link"
-                  : "border-line text-muted-foreground hover:border-link/60 hover:text-foreground"
-              )}
-            >
-              {y}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <ContributionGraph
-        className="mx-auto gap-4 py-1"
-        data={data}
-        blockSize={12}
-        blockMargin={2}
-        blockRadius={0}
-        aria-label="GitHub Contributions Graph"
-      >
         <ContributionGraphCalendar
           className="px-4 **:data-[slot=month-labels]:text-muted-foreground"
           title="GitHub Contributions"
@@ -105,19 +83,48 @@ export function GitHubContributionGraph({
           )}
         </ContributionGraphCalendar>
 
-        <ContributionGraphFooter className="gap-4 px-4 leading-none">
-          <ContributionGraphTotalCount>
-            {() => (
-              <div className="text-muted-foreground">
-                {(totals[year] ?? 0).toLocaleString("en")} contributions in{" "}
-                {year}.
-              </div>
-            )}
-          </ContributionGraphTotalCount>
+          <ContributionGraphFooter className="gap-4 leading-none">
+            <ContributionGraphTotalCount>
+              {() => (
+                <div className="text-muted-foreground">
+                  {(totals[year] ?? 0).toLocaleString("en")} contributions in{" "}
+                  {year}.
+                </div>
+              )}
+            </ContributionGraphTotalCount>
 
-          <ContributionGraphLegend aria-hidden />
-        </ContributionGraphFooter>
-      </ContributionGraph>
+            <ContributionGraphLegend aria-hidden />
+          </ContributionGraphFooter>
+        </ContributionGraph>
+      </div>
+
+      {/* Year selector — vertical on the right (GitHub-style), wraps on mobile.
+          Ghost buttons that match the theme-toggle look. */}
+      {years.length > 1 && (
+        <div
+          className="flex shrink-0 gap-1.5 max-sm:flex-wrap sm:flex-col"
+          role="group"
+          aria-label="Filter contributions by year"
+        >
+          {years.map((y) => (
+            <button
+              key={y}
+              type="button"
+              onClick={() => setYear(y)}
+              aria-pressed={y === year}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "border-none font-mono sm:w-16 sm:justify-start",
+                y === year
+                  ? "bg-muted font-medium text-foreground"
+                  : "text-muted-foreground"
+              )}
+            >
+              {y}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

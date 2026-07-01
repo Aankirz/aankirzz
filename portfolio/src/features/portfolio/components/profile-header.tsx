@@ -19,11 +19,9 @@ export function ProfileHeader() {
           preload="metadata"
           aria-hidden
         />
-        {/* feather all four edges so the clip looks submerged in the surface */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ boxShadow: "inset 0 0 70px 28px var(--background)" }}
-        />
+        {/* feather all four edges so the clip looks submerged in the surface;
+            smaller inset on mobile so it doesn't swallow the whole clip */}
+        <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_36px_14px_var(--background)] sm:shadow-[inset_0_0_70px_28px_var(--background)]" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/0 via-background/15 to-background" />
         <p className="absolute inset-0 flex items-center justify-center px-4 text-center font-serif text-2xl tracking-wide text-white/95 italic [text-shadow:0_2px_14px_rgb(0_0_0/0.65)] sm:text-4xl">
           Build · Ship · Repeat
