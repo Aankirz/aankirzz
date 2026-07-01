@@ -1,0 +1,25 @@
+{
+  "short_name": "Ankit Kiran",
+  "name": "Ankit Kiran",
+  "description": "Software engineer. I build LLM agent runtimes and pixel-perfect frontends.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/avatar.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "/?utm_source=pwa",
+  "start_url": "/?utm_source=pwa",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#09090b",
+  "background_color": "#09090b"
+}
