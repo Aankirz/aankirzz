@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic"
 import Link from "next/link"
 import { MailIcon } from "lucide-react"
 
@@ -17,19 +16,13 @@ import { SiteHeaderShell } from "@/components/site-header-shell"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { SOCIAL } from "@/features/portfolio/data/social-links"
 
-const BrandContextMenu = dynamic(
-  () => import("@/components/brand-context-menu")
-)
-
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 max-w-screen overflow-x-clip bg-background px-2 pt-(--header-pt) [--header-h:calc(var(--header-height)-var(--header-pt))] [--header-pt:--spacing(2)]">
       <SiteHeaderShell>
-        <BrandContextMenu>
-          <Link href="/" aria-label="Home">
-            <ChanhDaiMark className="h-8 shrink-0" />
-          </Link>
-        </BrandContextMenu>
+        <Link href="/" aria-label="Home">
+          <ChanhDaiMark className="h-8 shrink-0" />
+        </Link>
 
         <div className="flex-1" />
 
