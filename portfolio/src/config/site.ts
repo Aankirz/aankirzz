@@ -39,11 +39,11 @@ export const SOURCE_CODE_GITHUB_URL = "https://github.com/Aankirz"
 export const SPONSORSHIP_URL = "https://github.com/Aankirz"
 
 export const RESUME_URL =
-  "https://drive.google.com/file/d/1g2jNIvQ10qzXj3GLvtrHnoGZrpPY7u7K/view?usp=sharing"
+  "https://drive.google.com/file/d/1Q17qTLNSn-RF_rP8GQjAZvP5wCCoKYMA/view?usp=drive_link"
 
 // Embeddable Google Drive preview (iframe) for the in-page resume viewer.
 export const RESUME_EMBED_URL =
-  "https://drive.google.com/file/d/1g2jNIvQ10qzXj3GLvtrHnoGZrpPY7u7K/preview"
+  "https://drive.google.com/file/d/1Q17qTLNSn-RF_rP8GQjAZvP5wCCoKYMA/preview"
 
 export const UTM_PARAMS = {
   utm_source: "ankitkiran.vercel.app",
