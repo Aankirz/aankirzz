@@ -27,8 +27,8 @@ export function GitHubContributionGraph({
 }) {
   const { years, byYear, totals } = use(contributions)
 
-  const currentYear = new Date().getFullYear()
-  const initialYear = years.includes(currentYear) ? currentYear : years[0]
+  const previousYear = new Date().getFullYear() - 1
+  const initialYear = years.includes(previousYear) ? previousYear : years[0]
   const [year, setYear] = useState(initialYear)
 
   // Graceful empty state when the contributions API is unreachable.
