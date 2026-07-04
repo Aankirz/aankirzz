@@ -24,19 +24,17 @@ const MIN_YEAR_CONTRIBUTIONS = 10
 
 const EMPTY: YearContributions = { years: [], byYear: {}, totals: {} }
 
-export const getGitHubContributions = unstable_cache(
+// Throws on failure so unstable_cache never stores an empty result;
+// getGitHubContributions catches and degrades gracefully per request.
+const fetchContributions = unstable_cache(
   async (): Promise<YearContributions> => {
-    let data: GitHubContributionsResponse
-    try {
-      const res = await fetch(
-        `${process.env.GITHUB_CONTRIBUTIONS_API_URL}/v4/${GITHUB_USERNAME}?y=all`
-      )
-      if (!res.ok) return EMPTY
-      data = (await res.json()) as GitHubContributionsResponse
-    } catch {
-      // Network failure (e.g. during a build with no egress): degrade gracefully.
-      return EMPTY
+    const res = await fetch(
+      `${process.env.GITHUB_CONTRIBUTIONS_API_URL}/v4/${GITHUB_USERNAME}?y=all`
+    )
+    if (!res.ok) {
+      throw new Error(`GitHub contributions API responded ${res.status}`)
     }
+    const data = (await res.json()) as GitHubContributionsResponse
 
     const byYear: Record<number, Activity[]> = {}
     for (const day of data.contributions ?? []) {
@@ -59,3 +57,12 @@ export const getGitHubContributions = unstable_cache(
   ["github-contributions"],
   { revalidate: 86400 } // Cache for 1 day (86400 seconds)
 )
+
+export async function getGitHubContributions(): Promise<YearContributions> {
+  try {
+    return await fetchContributions()
+  } catch {
+    // Network failure or bad response: degrade gracefully without caching it.
+    return EMPTY
+  }
+}
