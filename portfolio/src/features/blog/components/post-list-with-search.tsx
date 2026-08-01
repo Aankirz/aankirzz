@@ -1,11 +1,12 @@
 "use client"
 
-import type { Doc } from "@/features/doc/types/document"
+import { useFilteredPosts, useIsFiltering } from "../hooks/use-filtered-posts"
+import type { BlogPostSummary } from "../lib/post-summary"
+import { PostLedger } from "./post-ledger"
 
-import { useFilteredPosts } from "../hooks/use-filtered-posts"
-import { PostList } from "./post-list"
-
-export function PostListWithSearch({ posts }: { posts: Doc[] }) {
+export function PostListWithSearch({ posts }: { posts: BlogPostSummary[] }) {
   const filteredPosts = useFilteredPosts(posts)
-  return <PostList posts={filteredPosts} />
+  const isFiltering = useIsFiltering()
+
+  return <PostLedger posts={filteredPosts} showLead={!isFiltering} />
 }

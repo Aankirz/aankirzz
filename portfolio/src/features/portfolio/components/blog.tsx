@@ -1,9 +1,9 @@
 import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/base/ui/button"
-import { PostItem } from "@/features/blog/components/post-item"
+import { PostRow } from "@/features/blog/components/post-row"
+import { toBlogPostSummary } from "@/features/blog/lib/post-summary"
 import { getBlogPosts } from "@/features/doc/data/documents"
 import {
   Panel,
@@ -14,9 +14,15 @@ import {
 import { PanelTitleCopy } from "@/features/portfolio/components/panel-title-copy"
 
 const ID = "blog"
+const PREVIEW_COUNT = 4
 
+/** The portfolio's window onto the blog. Same ledger rows as /blog, truncated. */
 export function Blog() {
   const allPosts = getBlogPosts()
+
+  if (allPosts.length === 0) return null
+
+  const preview = allPosts.slice(0, PREVIEW_COUNT).map(toBlogPostSummary)
 
   return (
     <Panel id={ID}>
@@ -28,28 +34,17 @@ export function Blog() {
         </PanelTitle>
       </PanelHeader>
 
-      <div className="relative py-4">
-        <div className="pointer-events-none absolute inset-0 -z-1 grid grid-cols-1 gap-4 max-sm:hidden sm:grid-cols-2">
-          <div className="border-r border-line"></div>
-          <div className="border-l border-line"></div>
-        </div>
+      <ul>
+        {preview.map((post, index) => (
+          <PostRow
+            key={post.slug}
+            post={post}
+            index={allPosts.length - index}
+          />
+        ))}
+      </ul>
 
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {allPosts.slice(0, 6).map((post) => (
-            <li
-              key={post.slug}
-              className={cn(
-                "max-sm:screen-line-top max-sm:screen-line-bottom",
-                "sm:nth-[2n+1]:screen-line-top sm:nth-[2n+1]:screen-line-bottom"
-              )}
-            >
-              <PostItem post={post} headingAs="h3" imageLoading="lazy" />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="screen-line-top flex justify-center py-2">
+      <div className="flex justify-center py-2">
         <Button
           className="gap-2 pr-2.5 pl-3"
           variant="secondary"

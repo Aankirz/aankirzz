@@ -1,27 +1,33 @@
-import type { Doc } from "@/features/doc/types/document"
+import { useMemo } from "react"
 
-import { useSearchQuery } from "./use-search-query"
+import type { BlogPostSummary } from "../lib/post-summary"
+import { useSearchQuery, useTagQuery } from "./use-search-query"
 
 const normalize = (text: string) => text.toLowerCase().replaceAll(" ", "")
 
-const matchesQuery = (post: Doc, normalizedQuery: string) => {
-  const normalizedTitle = normalize(post.metadata.title)
-  const normalizedDescription = normalize(post.metadata.description)
+const matchesQuery = (post: BlogPostSummary, normalizedQuery: string) =>
+  normalize(post.title).includes(normalizedQuery) ||
+  normalize(post.description).includes(normalizedQuery) ||
+  post.tags.some((tag) => normalize(tag).includes(normalizedQuery))
 
-  return (
-    normalizedTitle.includes(normalizedQuery) ||
-    normalizedDescription.includes(normalizedQuery)
-  )
-}
-
-const searchPosts = (posts: Doc[], query: string | null) => {
-  if (!query) return posts
-
-  const normalizedQuery = normalize(query)
-  return posts.filter((post) => matchesQuery(post, normalizedQuery))
-}
-
-export function useFilteredPosts(posts: Doc[]) {
+export function useFilteredPosts(posts: BlogPostSummary[]) {
   const { query } = useSearchQuery()
-  return searchPosts(posts, query)
+  const { tag } = useTagQuery()
+
+  return useMemo(() => {
+    const byTag = tag ? posts.filter((post) => post.tags.includes(tag)) : posts
+
+    if (!query) return byTag
+
+    const normalizedQuery = normalize(query)
+    return byTag.filter((post) => matchesQuery(post, normalizedQuery))
+  }, [posts, query, tag])
+}
+
+/** True when any filter is narrowing the archive. */
+export function useIsFiltering() {
+  const { query } = useSearchQuery()
+  const { tag } = useTagQuery()
+
+  return Boolean(query || tag)
 }
