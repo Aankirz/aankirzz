@@ -20,3 +20,8 @@
 - Publishing pipeline (ported from the Simbian marketing site, trimmed for one author): `src/features/doc/content/blog/AGENT.md` authoring contract plus `src/scripts/validate-blog-frontmatter.mjs` hard-gate validator (`pnpm validate:blog`) enforcing required fields, date format, slug uniqueness, and a closed tag set. Skipped the upstream markdown precompiler — posts are already read once at build time and rendered statically.
 - Homepage: rewrote `features/portfolio/components/blog.tsx` to reuse the ledger rows and wired the panel into `(app)/page.tsx` between Projects and Tech stack.
 - Added `reading-time.ts` (strips code/JSX before counting) with unit tests.
+
+## 2026-08-02 — GitHub contributions default to a rolling year
+- The graph opened on `getFullYear() - 1` (so, 2025) because the data layer only knew calendar-year buckets. Now matches a GitHub profile: the current-year button is selected on load but renders a rolling 365-day window ending today, labelled "contributions in the last year"; older year buttons show true calendar years. No extra filter chip is added, since GitHub does not have one.
+- Extracted `buildRollingWindow` into `features/portfolio/lib/contribution-window.ts`, free of `server-only` so it is unit-testable, taking `today` as a parameter for determinism. The upstream API returns whole calendar years newest-first and pads the current year to 31 December, so the window bounds both ends and re-sorts ascending.
+- Computed inside the cached fetch, so the window shifts on daily revalidation rather than per request.

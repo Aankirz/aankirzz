@@ -25,11 +25,19 @@ export function GitHubContributionGraph({
 }: {
   contributions: Promise<YearContributions>
 }) {
-  const { years, byYear, totals } = use(contributions)
+  const { rolling, years, byYear, totals } = use(contributions)
 
-  const previousYear = new Date().getFullYear() - 1
-  const initialYear = years.includes(previousYear) ? previousYear : years[0]
-  const [year, setYear] = useState(initialYear)
+  // Derived from the server payload rather than the client clock, so the
+  // selected year is identical on both sides of hydration.
+  const currentYear = rolling.end
+    ? Number(rolling.end.slice(0, 4))
+    : (years[0] ?? new Date().getFullYear())
+
+  // GitHub selects the current year on load and renders the rolling year
+  // behind it; only the older buttons show a true calendar year.
+  const [view, setView] = useState(
+    years.includes(currentYear) ? currentYear : years[0]
+  )
 
   // Graceful empty state when the contributions API is unreachable.
   if (years.length === 0) {
@@ -40,7 +48,11 @@ export function GitHubContributionGraph({
     )
   }
 
-  const data = byYear[year] ?? byYear[initialYear] ?? []
+  const isRolling = view === currentYear && rolling.activities.length > 0
+
+  const data = isRolling ? rolling.activities : (byYear[view] ?? [])
+  const count = isRolling ? rolling.total : (totals[view] ?? 0)
+  const period = isRolling ? "the last year" : view
 
   return (
     <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-start sm:gap-4">
@@ -54,40 +66,40 @@ export function GitHubContributionGraph({
           blockRadius={0}
           aria-label="GitHub Contributions Graph"
         >
-        <ContributionGraphCalendar
-          className="px-4 **:data-[slot=month-labels]:text-muted-foreground"
-          title="GitHub Contributions"
-          aria-hidden
-        >
-          {({ activity, dayIndex, weekIndex }) => (
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <g>
-                    <ContributionGraphBlock
-                      activity={activity}
-                      dayIndex={dayIndex}
-                      weekIndex={weekIndex}
-                    />
-                  </g>
-                }
-              />
-              <TooltipContent className="font-sans">
-                <p>
-                  {activity.count} contribution{activity.count > 1 ? "s" : null}{" "}
-                  on {format(new Date(activity.date), "dd.MM.yyyy")}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          )}
-        </ContributionGraphCalendar>
+          <ContributionGraphCalendar
+            className="px-4 **:data-[slot=month-labels]:text-muted-foreground"
+            title="GitHub Contributions"
+            aria-hidden
+          >
+            {({ activity, dayIndex, weekIndex }) => (
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <g>
+                      <ContributionGraphBlock
+                        activity={activity}
+                        dayIndex={dayIndex}
+                        weekIndex={weekIndex}
+                      />
+                    </g>
+                  }
+                />
+                <TooltipContent className="font-sans">
+                  <p>
+                    {activity.count} contribution
+                    {activity.count > 1 ? "s" : null} on{" "}
+                    {format(new Date(activity.date), "dd.MM.yyyy")}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </ContributionGraphCalendar>
 
           <ContributionGraphFooter className="gap-4 leading-none">
             <ContributionGraphTotalCount>
               {() => (
                 <div className="text-muted-foreground">
-                  {(totals[year] ?? 0).toLocaleString("en")} contributions in{" "}
-                  {year}.
+                  {count.toLocaleString("en")} contributions in {period}.
                 </div>
               )}
             </ContributionGraphTotalCount>
@@ -97,8 +109,8 @@ export function GitHubContributionGraph({
         </ContributionGraph>
       </div>
 
-      {/* Year selector — vertical on the right (GitHub-style), wraps on mobile.
-          Ghost buttons that match the theme-toggle look. */}
+      {/* Year selector — vertical on the right (GitHub-style), wraps on
+          mobile. */}
       {years.length > 1 && (
         <div
           className="flex shrink-0 gap-1 max-sm:flex-wrap sm:flex-col"
@@ -106,24 +118,38 @@ export function GitHubContributionGraph({
           aria-label="Filter contributions by year"
         >
           {years.map((y) => (
-            <button
+            <PeriodButton
               key={y}
-              type="button"
-              onClick={() => setYear(y)}
-              aria-pressed={y === year}
-              className={cn(
-                "cursor-pointer rounded-md px-2 py-1 text-center font-mono text-xs leading-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-link focus-visible:outline-none sm:w-14 sm:text-left",
-                y === year
-                  ? "bg-muted font-medium text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
+              isActive={y === view}
+              onClick={() => setView(y)}
             >
               {y}
-            </button>
+            </PeriodButton>
           ))}
         </div>
       )}
     </div>
+  )
+}
+
+function PeriodButton({
+  isActive,
+  className,
+  ...props
+}: React.ComponentProps<"button"> & { isActive: boolean }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={isActive}
+      className={cn(
+        "cursor-pointer rounded-md px-2 py-1 text-center font-mono text-xs whitespace-nowrap transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-link focus-visible:outline-none sm:w-14 sm:text-left",
+        isActive
+          ? "bg-muted font-medium text-foreground"
+          : "text-muted-foreground hover:text-foreground",
+        className
+      )}
+      {...props}
+    />
   )
 }
 

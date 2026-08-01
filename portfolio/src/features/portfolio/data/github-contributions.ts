@@ -4,6 +4,8 @@ import { unstable_cache } from "next/cache"
 
 import { GITHUB_USERNAME } from "@/config/site"
 import type { Activity } from "@/registry/components/contribution-graph"
+import type { ContributionWindow } from "@/features/portfolio/lib/contribution-window"
+import { buildRollingWindow } from "@/features/portfolio/lib/contribution-window"
 
 type GitHubContributionsResponse = {
   total: Record<string, number>
@@ -11,6 +13,11 @@ type GitHubContributionsResponse = {
 }
 
 export type YearContributions = {
+  /**
+   * Rolling year ending today, matching what a GitHub profile shows on load.
+   * This is the default view; the per-year buckets below are the archive.
+   */
+  rolling: ContributionWindow
   /** Years that have contributions, newest first (e.g. [2026, 2025, ...]). */
   years: number[]
   /** Daily activity grouped by calendar year. */
@@ -22,7 +29,12 @@ export type YearContributions = {
 // Minimum contributions for a year to be worth offering as a filter.
 const MIN_YEAR_CONTRIBUTIONS = 10
 
-const EMPTY: YearContributions = { years: [], byYear: {}, totals: {} }
+const EMPTY: YearContributions = {
+  rolling: { activities: [], total: 0, start: "", end: "" },
+  years: [],
+  byYear: {},
+  totals: {},
+}
 
 // Throws on failure so unstable_cache never stores an empty result;
 // getGitHubContributions catches and degrades gracefully per request.
@@ -52,7 +64,11 @@ const fetchContributions = unstable_cache(
       .filter((y) => totals[y] >= MIN_YEAR_CONTRIBUTIONS)
       .sort((a, b) => b - a)
 
-    return { years, byYear, totals }
+    // Computed inside the cached fetch, so the window shifts when the cache
+    // revalidates (daily) rather than on every request.
+    const rolling = buildRollingWindow(data.contributions ?? [], new Date())
+
+    return { rolling, years, byYear, totals }
   },
   ["github-contributions"],
   { revalidate: 86400 } // Cache for 1 day (86400 seconds)
