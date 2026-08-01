@@ -23,6 +23,7 @@
     "lint": "eslint . --cache --cache-location .eslintcache",
     "lint:fix": "eslint --fix . --cache --cache-location .eslintcache",
     "check-types": "tsc --noEmit --pretty",
+    "validate:blog": "node ./src/scripts/validate-blog-frontmatter.mjs",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,md,mdx}\" --cache",
     "registry:build": "bun run ./src/scripts/build-registry.mts && shadcn build",

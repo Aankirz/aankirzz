@@ -48,6 +48,28 @@ All content lives in `src/features/doc/content/` as MDX files, split into `blog/
 - **Data layer**: `src/features/doc/data/documents.ts` (`getAllDocs`, `getDocBySlug`, `getDocsByCategory`)
 - **Blog UI**: `src/features/blog/` (rendering only, imports data from `features/doc`)
 
+### Publishing a blog post
+
+**Read `src/features/doc/content/blog/AGENT.md` before writing any file in that
+folder.** It is the authoring contract: frontmatter schema, the closed tag set,
+body rules, and the checklist.
+
+Frontmatter is gated by a validator, not by convention:
+
+```bash
+pnpm validate:blog                                    # every post
+node ./src/scripts/validate-blog-frontmatter.mjs <file>   # one post
+node ./src/scripts/validate-blog-frontmatter.mjs --list-tags
+```
+
+Exit 1 means the post is not publishable. Fix the post; do not relax the rule.
+Tags are a closed set in `CANONICAL_TAGS` because every distinct tag becomes a
+filter chip on `/blog`.
+
+Per-post views and reactions live in `src/features/blog/data/post-engagement.ts`,
+backed by the same Upstash/Vercel KV store as the site-wide counter. Unconfigured
+store means the UI hides itself rather than showing zeros.
+
 ## Coding guidelines
 
 - TypeScript strict mode; explicit types when necessary
