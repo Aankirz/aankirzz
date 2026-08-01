@@ -1,4 +1,4 @@
-import { IBM_Plex_Serif } from "next/font/google"
+import { IBM_Plex_Serif, Literata } from "next/font/google"
 import { GeistMono } from "geist/font/mono"
 import { GeistSans } from "geist/font/sans"
 
@@ -12,6 +12,20 @@ const fontSerif = IBM_Plex_Serif({
   display: "swap",
   fallback: ["serif"],
   variable: "--font-serif",
+})
+
+/**
+ * Long-form reading face, used for blog article body copy only. Geist is a UI
+ * face and flattens out past a few hundred words; Literata was drawn for
+ * on-screen book reading. Site chrome stays on Geist.
+ */
+const fontReading = Literata({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+  fallback: ["Georgia", "serif"],
+  variable: "--font-reading",
 })
 
 // const fontPixel = localFont({
@@ -40,6 +54,7 @@ export const fontVariables = cn(
   fontSans.variable,
   fontMono.variable,
   fontSerif.variable,
+  fontReading.variable,
   "[--font-sans:var(--font-geist-sans)]",
   "[--font-mono:var(--font-geist-mono)]"
 )

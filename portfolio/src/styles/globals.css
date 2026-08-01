@@ -58,6 +58,7 @@
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
   --font-heading: var(--font-sans);
+  --font-reading: var(--font-reading);
 
   --default-mono-font-feature-settings: "ss11" 1, "zero" 1, "tnum" 1;
 
@@ -185,12 +186,68 @@
 
 @utility prose-ncdai {
   @apply prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-pretty md:prose-headings:text-balance prose-h2:text-xl prose-h3:text-lg;
-  @apply prose-a:font-normal prose-a:wrap-break-word prose-a:text-foreground prose-a:link-underline;
+  @apply prose-a:font-normal prose-a:wrap-break-word prose-a:link-underline prose-a:text-foreground;
   @apply prose-code:rounded-md prose-code:border prose-code:bg-muted/50 prose-code:px-1 prose-code:py-px prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none retina:prose-code:border-[0.5px];
   @apply prose-strong:font-medium;
   @apply prose-hr:border-line;
   @apply prose-blockquote:border-l prose-blockquote:border-line prose-blockquote:font-normal prose-blockquote:text-muted-foreground prose-blockquote:not-italic prose-blockquote:[&_p:first-of-type]:before:content-none prose-blockquote:[&_p:last-of-type]:after:content-none;
   @apply prose-ul:marker:text-xs/none;
+}
+
+/**
+ * Long-form article body. Layers on top of prose-ncdai: swaps body copy to the
+ * reading face at a real reading size, keeps headings on Geist so the sans/serif
+ * contrast carries the hierarchy instead of a display serif doing it alone.
+ */
+@utility prose-reading {
+  @apply prose-p:font-reading prose-blockquote:font-reading prose-li:font-reading;
+  @apply text-[1.125rem]/[1.75] tracking-[-0.003em];
+  @apply prose-headings:font-heading prose-headings:tracking-tight;
+  @apply prose-h2:mt-12 prose-h2:text-2xl prose-h3:mt-8 prose-h3:text-xl;
+  @apply prose-li:my-1 prose-li:marker:text-muted-foreground;
+  @apply prose-strong:font-semibold;
+
+  /* Lead paragraph: the first line of an article sets the reading pace. */
+  & > p:first-of-type {
+    @apply text-[1.3125rem]/[1.6] text-muted-foreground;
+  }
+
+  /* Pull-quote, not a side-striped callout. */
+  & blockquote {
+    @apply my-8 border-y border-l-0 border-line py-5 pl-0 text-[1.25rem]/[1.6] text-foreground;
+  }
+
+  & figcaption {
+    @apply mt-2 text-center font-mono text-xs text-muted-foreground;
+  }
+
+  /* Code stays on the mono face at UI size; serif numerals read wrong in code. */
+  & :where(code, pre) {
+    @apply font-mono tracking-normal;
+  }
+}
+
+/**
+ * Fills the article's top hairline as the page scrolls. Pure CSS scroll-driven
+ * animation, so it costs no JS and no scroll listener; browsers without
+ * animation-timeline simply show an empty rule.
+ */
+@utility reading-progress {
+  @apply h-px w-full origin-left scale-x-0 bg-link;
+
+  @supports (animation-timeline: scroll()) {
+    animation: reading-progress-fill linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes reading-progress-fill {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
 }
 
 @utility code-inline {
