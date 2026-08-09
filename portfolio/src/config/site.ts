@@ -22,21 +22,12 @@ export const META_THEME_COLORS = {
   dark: "#09090b",
 }
 
-export const MAIN_NAV: NavItem<Route>[] = [
-  {
-    title: "Blog",
-    href: "/blog",
-  },
-]
+export const MAIN_NAV: NavItem<Route>[] = []
 
 export const MOBILE_NAV: NavItem<Route>[] = [
   {
     title: "Home",
     href: "/",
-  },
-  {
-    title: "Blog",
-    href: "/blog",
   },
 ]
 

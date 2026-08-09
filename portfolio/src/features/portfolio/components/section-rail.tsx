@@ -8,7 +8,6 @@ import { useMediaQuery } from "@/hooks/use-media-query"
 const SECTIONS = [
   { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
-  { id: "blog", label: "Blog" },
   { id: "stack", label: "Stack" },
   { id: "education", label: "Education" },
   { id: "awards", label: "Awards" },
