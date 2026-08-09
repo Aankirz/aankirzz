@@ -5,11 +5,12 @@ import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { AiSidebar } from "@/features/portfolio/components/ai-sidebar"
 import { InteractionSounds } from "@/features/portfolio/components/interaction-sounds"
+import { ModeToggle } from "@/features/portfolio/components/mode-toggle"
 import { ProjectShowcase } from "@/features/portfolio/components/project-showcase"
 import { ResumeFab } from "@/features/portfolio/components/resume-fab"
 import { ResumeModal } from "@/features/portfolio/components/resume-modal"
-import { ViewBeacon } from "@/features/portfolio/components/view-beacon"
 import { SectionRail } from "@/features/portfolio/components/section-rail"
+import { ViewBeacon } from "@/features/portfolio/components/view-beacon"
 
 const ScrollToTop = dynamic(() =>
   import("@/components/scroll-to-top").then((mod) => mod.ScrollToTop)
@@ -32,6 +33,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="bg-background pb-[env(safe-area-inset-bottom,0)]" />
       </div>
       <SiteBottomNav />
+      <ModeToggle
+        current="Human"
+        className="bg-popover text-foreground shadow-md ring ring-foreground/10 dark:ring-foreground/20"
+      />
       <ScrollToTop />
       <SectionRail />
       <ProjectShowcase />

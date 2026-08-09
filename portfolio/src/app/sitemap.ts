@@ -14,6 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${SITE_INFO.url}/ai`,
+      lastModified: new Date().toISOString(),
+      priority: 0.5,
+    },
+    {
       url: `${SITE_INFO.url}/blog`,
       lastModified: new Date().toISOString(),
       priority: 0.8,
